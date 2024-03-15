@@ -175,7 +175,21 @@ const saveData = () => {
 
 document.addEventListener(SAVED_EVENT, () => {
   console.log(localStorage.getItem(STORAGE_KEY))
-})
+
+  const alertContainer = document.getElementById('alert-container');
+  const alert = document.createElement('div');
+  alert.classList.add('alert');
+  alert.innerText = 'Data berhasil disimpan';
+  alertContainer.appendChild(alert);
+
+  setTimeout(() => {
+    alert.classList.add('fade-out');
+    setTimeout(() => {
+      alert.remove();
+    }, 1000);
+  }, 3000);
+});
+
 
 const loadDataFromStorage = () => {
   const serializedData = localStorage.getItem(STORAGE_KEY)
