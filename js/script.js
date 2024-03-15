@@ -1,5 +1,15 @@
 const todos = []
-const RENDER_EVENT = "render-todos"
+const RENDER_EVENT = 'render-todos'
+const SAVED_EVENT = 'saved-todo'
+const STORAGE_KEY = 'TODO_APPS'
+
+const isStorageExist = () => {
+  if (typeof (Storage) === undefined) {
+    alert("Browser kamu tidak mendukung local storage")
+    return false
+  }
+  return true
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const submitForm = document.getElementById("form")
@@ -7,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault()
     addTodo()
   })
+  if (isStorageExist()) {
+    loadDataFromStorage()
+  }
 })
 
 const addTodo = () => {
@@ -23,6 +36,7 @@ const addTodo = () => {
   todos.push(todoObject)
 
   document.dispatchEvent(new Event(RENDER_EVENT))
+  saveData()
 }
 
 const generateId = () => {
@@ -110,6 +124,7 @@ const addTaskCompleted = (todoId) => {
 
   todoTarget.isCompleted = true
   document.dispatchEvent(new Event(RENDER_EVENT))
+  saveData()
 }
 
 const findTodo = (todoId) => {
@@ -128,6 +143,7 @@ const removeTaskFromCompleted = (todoId) => {
 
   todos.splice(todoTarget, 1)
   document.dispatchEvent(new Event(RENDER_EVENT))
+  saveData()
 }
 
 const undoTaskFromCompleted = (todoId) => {
@@ -137,6 +153,7 @@ const undoTaskFromCompleted = (todoId) => {
 
   todoTarget.isCompleted = false
   document.dispatchEvent(new Event(RENDER_EVENT))
+  saveData()
 }
 
 const findTodoIndex = (todoId) => {
@@ -146,4 +163,28 @@ const findTodoIndex = (todoId) => {
     }
   }
   return -1
+}
+
+const saveData = () => {
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(todos)
+    localStorage.setItem(STORAGE_KEY, parsed)
+    document.dispatchEvent(new Event(SAVED_EVENT))
+  }
+}
+
+document.addEventListener(SAVED_EVENT, () => {
+  console.log(localStorage.getItem(STORAGE_KEY))
+})
+
+const loadDataFromStorage = () => {
+  const serializedData = localStorage.getItem(STORAGE_KEY)
+  let data = JSON.parse(serializedData)
+
+  if (data !== null) {
+    for (const todo of data) {
+      todos.push(todo)
+    }
+  }
+  document.dispatchEvent(new Event(RENDER_EVENT))
 }
