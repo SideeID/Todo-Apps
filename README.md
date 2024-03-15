@@ -7,7 +7,7 @@ Ini adalah aplikasi Todo sederhana yang dibuat dengan JavaScript. Aplikasi ini m
 - Tambahkan tugas baru
 - Tandai tugas sebagai selesai
 - Hapus tugas yang telah selesai
-- Penyimpanan Lokal (comming soon...)
+- Penyimpanan Lokal
 
 ## Penggunaan
 
